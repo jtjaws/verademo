@@ -45,3 +45,29 @@ Actions:
           uses: dependency-check/Dependency-Check_Action@1.1.0
     Compute:
       Type: EC2
+  depcheck-as-testaction:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/managed-test@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    Outputs:
+      # Optional; Automatically discover reports for popular test frameworks
+      AutoDiscoverReports:
+        Enabled: true
+        # Use as prefix for the report files
+        ReportNamePrefix: rpt
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: Downloading & running OWASP Dependency Check
+        - Run: curl -LJOh
+            https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.3/dependency-check-7.4.3-release.zip
+        - Run: unzip dependency-check-7.4.3-release.zip
+        - Run: dependency-check/bin/dependency-check.sh -s npm/* -f SARIF -o
+            reports/npm_sarif.sarif
+    Compute:
+      Type: EC2
