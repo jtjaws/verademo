@@ -43,6 +43,14 @@ Actions:
       Steps:
         - name: Dependency Check
           uses: dependency-check/Dependency-Check_Action@1.1.0
+          with:
+            project: 'test'
+            path: '.'
+            format: 'SARIF'
+            out: 'reports' # this is the default, no need to specify unless you wish to override it
+            args: >
+              --failOnCVSS 7
+              --enableRetired
     Compute:
       Type: EC2
   depcheck-as-testaction:
@@ -63,9 +71,8 @@ Actions:
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
-        - Run: Downloading & running OWASP Dependency Check
-        - Run: curl -LJOh
-            https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.3/dependency-check-7.4.3-release.zip
+        - Run: echo "Downloading & running OWASP Dependency Check"
+        - Run: curl -LJOh https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.3/dependency-check-7.4.3-release.zip
         - Run: unzip dependency-check-7.4.3-release.zip
         - Run: dependency-check/bin/dependency-check.sh -s npm/* -f SARIF -o
             reports/npm_sarif.sarif
